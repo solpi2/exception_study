@@ -10,21 +10,21 @@ import java.util.List;
 
 @Getter
 public class ValidationException extends BusinessException {
-    private final List<ValidationError> filedErrors;
+    private final List<ValidationError> fieldErrors;
 
     public ValidationException(String message) {
         super("VALIDATION_ERROR", message, HttpStatus.BAD_REQUEST);
-        this.filedErrors = new ArrayList<>();
+        this.fieldErrors = new ArrayList<>();
     }
 
     public ValidationException(List<FieldError> springFieldErrors) {
         super("VALIDATION_ERROR", "입력값 검증에 실패했습니다", HttpStatus.BAD_REQUEST);
 
-        this.filedErrors = new ArrayList<>();
+        this.fieldErrors = new ArrayList<>();
 
         if(springFieldErrors != null) {
             for (FieldError fieldError: springFieldErrors) {
-                this.filedErrors.add (new ValidationError(
+                this.fieldErrors.add (new ValidationError(
                         fieldError.getField(),
                         fieldError.getRejectedValue(),
                         fieldError.getDefaultMessage()
@@ -35,7 +35,7 @@ public class ValidationException extends BusinessException {
 
     public ValidationException(String field, Object rejectedValue, String message) {
         super("VALIDATION_ERROR", "입력값 검증에 실패했습니다", HttpStatus.BAD_REQUEST);
-        this.filedErrors = List.of(new ValidationError(field, rejectedValue, message));
+        this.fieldErrors = List.of(new ValidationError(field, rejectedValue, message));
     }
 
     @Getter
