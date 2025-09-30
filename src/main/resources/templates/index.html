@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Boot 예외 처리 데모</title>
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        background: white;
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        color: #666;
+        margin-bottom: 3rem;
+        font-size: 1.2rem;
+    }
+
+    .links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 15px 20px;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+    }
+
+    .info-section {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: left;
+    }
+
+    .info-section h3 {
+        color: #667eea;
+        margin-bottom: 1rem;
+    }
+
+    .test-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .test-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .test-list li:last-child {
+        border-bottom: none;
+    }
+
+    .code {
+        background: #f1f3f4;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Spring Boot 예외 처리</h1>
+  <div class="subtitle">전역 예외 처리와 커스텀 예외 시스템 데모</div>
+
+  <div class="links">
+    <a href="/web/users" class="btn btn-primary">웹 사용자 관리</a>
+    <a href="/api/users" class="btn btn-success" target="_blank">REST API 테스트</a>
+    <a href="/web/users/999" class="btn btn-danger">404 오류 테스트</a>
+    <a href="/api/users/test/runtime-error" class="btn btn-warning"
+       onclick="testApiError(this.href); return false;">런타임 오류 테스트</a>
+  </div>
+
+  <div class="info-section">
+    <h3>예외 처리 테스트 방법</h3>
+    <ul class="test-list">
+      <li><strong>404 오류:</strong> 존재하지 않는 사용자 ID 조회</li>
+      <li><strong>중복 오류:</strong> admin, root 등의 사용자명으로 가입</li>
+      <li><strong>검증 오류:</strong> 필수 필드를 비워두고 폼 제출</li>
+      <li><strong>비즈니스 오류:</strong> @blocked.com 도메인 이메일 사용</li>
+      <li><strong>시스템 오류:</strong> <span class="code">POST /api/users/test/system-error</span></li>
+    </ul>
+
+    <h3 style="margin-top: 2rem;">API 테스트 명령어</h3>
+    <div style="background: #333; color: #0f0; padding: 1rem; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.9rem; margin-top: 1rem;">
+      # 사용자 생성 (검증 오류 유발)<br>
+      curl -X POST http://localhost:8080/api/users \<br>
+      &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+      &nbsp;&nbsp;-d '{"username":"", "email":"invalid", "name":""}'<br><br>
+
+      # 존재하지 않는 사용자 조회 (404 오류)<br>
+      curl http://localhost:8080/api/users/999<br><br>
+
+      # 시스템 오류 테스트<br>
+      curl -X POST http://localhost:8080/api/users/test/system-error
+    </div>
+  </div>
+</div>
+
+<script>
+  async function testApiError(url) {
+      try {
+          const response = await fetch(url, { method: 'POST' });
+          const errorData = await response.json();
+
+          alert(`API 오류 응답:\n\n코드: ${errorData.code}\n메시지: ${errorData.message}\n시간: ${errorData.timestamp}`);
+      } catch (error) {
+          alert('테스트 중 오류 발생: ' + error.message);
+      }
+  }
+</script>
+</body>
+</html>
