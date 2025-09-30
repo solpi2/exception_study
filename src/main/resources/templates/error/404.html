@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 페이지를 찾을 수 없습니다</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 0;
+            line-height: 1;
+        }
+        .error-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 1rem 0;
+        }
+        .error-message {
+            color: #666;
+            margin: 1rem 0 2rem 0;
+            line-height: 1.6;
+        }
+        .error-details {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        .error-details dt {
+            font-weight: bold;
+            color: #495057;
+            margin-top: 0.5rem;
+        }
+        .error-details dd {
+            color: #6c757d;
+            margin: 0.25rem 0 0.5rem 1rem;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: opacity 0.3s ease;
+            margin: 0 0.5rem;
+        }
+        .back-button:hover {
+            opacity: 0.9;
+        }
+        .back-button.secondary {
+            background: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <div class="error-code">404</div>
+    <div class="error-title">페이지를 찾을 수 없습니다</div>
+    <div class="error-message" th:text="${errorMessage}">
+        요청하신 리소스를 찾을 수 없습니다.
+    </div>
+
+    <div class="error-details" th:if="${errorCode != null or requestUrl != null}">
+        <dl>
+            <dt th:if="${errorCode}">오류 코드:</dt>
+            <dd th:if="${errorCode}" th:text="${errorCode}"></dd>
+
+            <dt th:if="${requestUrl}">요청 URL:</dt>
+            <dd th:if="${requestUrl}" th:text="${requestUrl}"></dd>
+
+            <dt>발생 시간:</dt>
+            <dd th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
+        </dl>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        <a href="/" class="back-button">홈으로</a>
+        <a href="javascript:history.back()" class="back-button secondary">이전 페이지</a>
+    </div>
+</div>
+</body>
+</html>

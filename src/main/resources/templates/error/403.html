@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>403 - 접근 권한이 없습니다</title>
+  <style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        margin: 0;
+        padding: 40px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .error-container {
+        background: white;
+        padding: 3rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+    }
+    .error-code {
+        font-size: 6rem;
+        font-weight: bold;
+        color: #f5576c;
+        margin: 0;
+        line-height: 1;
+    }
+    .error-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin: 1rem 0;
+    }
+    .error-message {
+        color: #666;
+        margin: 1rem 0 2rem 0;
+        line-height: 1.6;
+    }
+    .back-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: opacity 0.3s ease;
+        margin: 0 0.5rem;
+    }
+    .back-button:hover {
+        opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+<div class="error-container">
+  <div class="error-code">403</div>
+  <div class="error-title">접근 권한이 없습니다</div>
+  <div class="error-message" th:text="${errorMessage}">
+    요청하신 리소스에 접근할 권한이 없습니다.
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <a href="/" class="back-button">홈으로</a>
+    <a href="/login" class="back-button">로그인</a>
+  </div>
+</div>
+</body>
+</html>
